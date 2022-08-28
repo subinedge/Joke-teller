@@ -113,10 +113,18 @@ var VoiceRSS = {
 
 // standard SDK code ends here
 
-function test() {
+// disable/enable button
+
+function toggleButton() {
+  button.disabled = !button.disabled;
+}
+
+// passing joke api response to tts api
+
+function tellMeJoke(joke) {
   VoiceRSS.speech({
     key: "fe397c5712a94baeb563188f1b3d76bf",
-    src: "Hello, world!",
+    src: joke,
     hl: "en-us",
     v: "Linda",
     r: 0,
@@ -126,8 +134,6 @@ function test() {
   });
 }
 
-// test();
-
 // Joke api
 
 async function getJokes() {
@@ -135,8 +141,10 @@ async function getJokes() {
   try {
     const response = await fetch(apiURL);
     const data = await response.json();
-    console.log(data.joke);
+    tellMeJoke(data.joke);
+    toggleButton();
   } catch (error) {}
 }
 
-getJokes();
+button.addEventListener("click", getJokes);
+audioElement.addEventListener("ended", toggleButton);
